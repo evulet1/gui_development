@@ -1,16 +1,22 @@
 import tkinter as tk
 from tkinter import ttk
 
+
+def cerate_file():
+    text_area = tk.Text(notebook)
+    text_area.pack(fill='both', expand=True)
+    notebook.add(text_area, text='Untitled')
+    notebook.select(text_area)
+
+
 root = tk.Tk()
 
 main = ttk.Frame(root)
-main.pack(side='left', fill='both', expand=True)
+main.pack(fill='both', expand=True, padx=1, pady=(4, 0))
 
-tk.Label(main, text='Label1', bg='red').pack(side='top', fill='both', expand=True)
-tk.Label(main, text='Label2', bg='red').pack(side='top', fill='both', expand=True)
+notebook = ttk.Notebook(main)
+notebook.pack(fill='both', expand=True)
 
-tk.Label(root, text='Label left', bg='green').pack(
-    side='left', expand=True, fill='both'
-)
+cerate_file()
 
 root.mainloop()
