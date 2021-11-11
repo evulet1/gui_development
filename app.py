@@ -10,13 +10,14 @@ def create_file(content="", title="Untitled"):
     notebook.add(text_area, text=title)
     notebook.select(text_area)
 
+
 def save_file():
     file_path = filedialog.asksaveasfilename()
 
     try:
         filename = os.path.basename(file_path)
         text_widget = root.nametowidget(notebook.select())
-        content = text_widget.get_content("1.0","end-1c")
+        content = text_widget.get_content("1.0", "end-1c")
 
         with open(file_path, "w") as file:
             file.write(content)
@@ -24,7 +25,7 @@ def save_file():
         print("Save operation cancelled")
         return
 
-    notebook.tab("current", text = filename)
+    notebook.tab("current", text=filename)
 
 
 def open_file():
@@ -56,14 +57,17 @@ root.config(menu=menubar)
 file_menu = tk.Menu(menubar)
 menubar.add_cascade(menu=file_menu, label='File')
 
-
-file_menu.add_command(label='New', command=create_file)
-file_menu.add_command(label='Open', command=open_file)
-file_menu.add_command(label='Save', command=save_file)
+file_menu.add_command(label='New', command=create_file, accelerator="Ctrl+N")
+file_menu.add_command(label='Open', command=open_file, accelerator="Ctrl+O")
+file_menu.add_command(label='Save', command=save_file, accelerator="Ctrl+S")
 
 notebook = ttk.Notebook(main)
 notebook.pack(fill='both', expand=True)
 
 create_file()
+
+root.bind("<Control-n>", lambda event: create_file())
+root.bind("<Control-o>", lambda event: open_file())
+root.bind("<Control-s>", lambda event: save_file())
 
 root.mainloop()
