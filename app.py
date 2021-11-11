@@ -3,10 +3,11 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 
 
-def create_file():
+def create_file(content="", title="Untitled"):
     text_area = tk.Text(notebook)
+    text_area.insert("end", content)
     text_area.pack(fill='both', expand=True)
-    notebook.add(text_area, text='Untitled')
+    notebook.add(text_area, text=title)
     notebook.select(text_area)
 
 def save_file():
@@ -26,6 +27,22 @@ def save_file():
     notebook.tab("current", text = filename)
 
 
+def open_file():
+    file_path = filedialog.askopenfilename()
+
+    try:
+        filename = os.path.basename(file_path)
+
+        with open(file_path, "r") as file:
+            content = file.read()
+
+    except(AttributeError, FileNotFoundError):
+        print("Open operation cancelled")
+        return
+
+    create_file(content, filename)
+
+
 root = tk.Tk()
 root.title('Text Editor')
 root.option_add('*tearOff', False)
@@ -41,6 +58,7 @@ menubar.add_cascade(menu=file_menu, label='File')
 
 
 file_menu.add_command(label='New', command=create_file)
+file_menu.add_command(label='Open', command=open_file)
 file_menu.add_command(label='Save', command=save_file)
 
 notebook = ttk.Notebook(main)
