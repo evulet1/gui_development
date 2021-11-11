@@ -107,6 +107,13 @@ def open_file():
     create_file(content, filename)
 
 
+def show_about_info():
+    messagebox.showinfo(
+        title="About",
+        message="Text Editor is a simple tabbed text editor designed to help you"
+    )
+
+
 root = tk.Tk()
 root.title('Text Editor')
 root.option_add('*tearOff', False)
@@ -118,13 +125,18 @@ menubar = tk.Menu()
 root.config(menu=menubar)
 
 file_menu = tk.Menu(menubar)
+help_menu = tk.Menu(menubar)
+
 menubar.add_cascade(menu=file_menu, label='File')
+menubar.add_cascade(menu=help_menu, label='Help')
 
 file_menu.add_command(label='New', command=create_file, accelerator="Ctrl+N")
 file_menu.add_command(label='Open', command=open_file, accelerator="Ctrl+O")
 file_menu.add_command(label='Save', command=save_file, accelerator="Ctrl+S")
 file_menu.add_command(label="Close Tab", command=close_current_tab, accelerator="Ctrl+Q")
 file_menu.add_command(label="Exit", command=confirm_quit)
+
+help_menu.add_command(label="About", command=show_about_info)
 
 notebook = ttk.Notebook(main)
 notebook.pack(fill='both', expand=True)
