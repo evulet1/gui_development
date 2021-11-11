@@ -32,6 +32,30 @@ def get_text_widget():
     return text_widget
 
 
+def close_current_tab():
+    current = get_text_widget()
+    if current_tab_unsaved() and not confirm_close():
+        return
+    if len(notebook.tabs()) == 1:
+        create_file()
+
+    notebook.forget(current)
+
+
+def current_tab_unsaved():
+    text_widget = get_text_widget()
+    content = text_widget.get("1.0", "end-1c")
+    return hash(content) != text_contents[str(text_widget)]
+
+
+def confirm_close():
+    return messagebox.askyesno(
+        message="You have unsaved changes. Are you sure you want to close?",
+        icon="question",
+        title="Unsaved changes"
+    )
+
+
 def confirm_quit():
     unsaved = False
 
@@ -43,15 +67,8 @@ def confirm_quit():
             unsaved = True
             break
 
-    if unsaved:
-        confirm = messagebox.askyesno(
-            message="You have unsaved changes. Are you sure you want to quit?",
-            icon="question",
-            title="Confirm Quit"
-        )
-
-        if not confirm:
-            return
+    if unsaved and not confirm_close():
+        return
 
     root.destroy()
 
@@ -106,6 +123,7 @@ menubar.add_cascade(menu=file_menu, label='File')
 file_menu.add_command(label='New', command=create_file, accelerator="Ctrl+N")
 file_menu.add_command(label='Open', command=open_file, accelerator="Ctrl+O")
 file_menu.add_command(label='Save', command=save_file, accelerator="Ctrl+S")
+file_menu.add_command(label="Close Tab", command=close_current_tab, accelerator="Ctrl+Q")
 file_menu.add_command(label="Exit", command=confirm_quit)
 
 notebook = ttk.Notebook(main)
@@ -116,6 +134,7 @@ create_file()
 root.bind("<KeyPress>", lambda event: check_for_chahges())
 root.bind("<Control-n>", lambda event: create_file())
 root.bind("<Control-o>", lambda event: open_file())
+root.bind("<Control-q>", lambda event: close_current_tab())
 root.bind("<Control-s>", lambda event: save_file())
 
 root.mainloop()
